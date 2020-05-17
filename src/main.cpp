@@ -1,3 +1,5 @@
+// #include <optional>
+
 #include <Arduino.h>
 
 #include <pb_encode.h>
@@ -20,12 +22,10 @@ uint8_t state = 0;
 uint8_t buffer[128];
 
 void sendMessage(const SimpleMessage& message) {
-    // [[maybe_unused]] char x[] = u8"Хахаха русская строка";
-
     // Create a stream that will write to our buffer.
     pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
 
-    pb_encode(&stream, SimpleMessage_fields, &message);
+    pb_encode(&stream, Message_fields, &message);
 
     Serial3.write(0x80);
     Serial3.write(0x1d);
@@ -56,7 +56,7 @@ void loop() {
     digitalWrite(PC13, pb9 ? 0 : 1);
     sensorWas = pb9;
 
-    SimpleMessage message = SimpleMessage_init_zero;
+    Message message = Message_init_zero;
     
     // Fill in the lucky number
     message.id = t;
