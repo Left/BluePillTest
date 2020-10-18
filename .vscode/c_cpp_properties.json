@@ -9,7 +9,6 @@
             "includePath": [
                 "/Users/vridosh/Documents/PlatformIO/Projects/BluePillTest/include",
                 "/Users/vridosh/Documents/PlatformIO/Projects/BluePillTest/src",
-                "/Users/vridosh/Documents/PlatformIO/Projects/BluePillTest/.pio/libdeps/genericSTM32F103C8/Nanopb",
                 "/Users/vridosh/.platformio/packages/framework-arduinoststm32/cores/arduino/avr",
                 "/Users/vridosh/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32",
                 "/Users/vridosh/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32/LL",
@@ -32,6 +31,7 @@
                 "/Users/vridosh/.platformio/packages/framework-cmsis/CMSIS/DSP/Include",
                 "/Users/vridosh/.platformio/packages/framework-arduinoststm32/cores/arduino",
                 "/Users/vridosh/.platformio/packages/framework-arduinoststm32/variants/Generic_F103Cx",
+                "/Users/vridosh/Documents/PlatformIO/Projects/BluePillTest/.pio/libdeps/genericSTM32F103C8/Nanopb",
                 "/Users/vridosh/.platformio/lib/Adafruit BME280 Library",
                 "/Users/vridosh/.platformio/lib/Adafruit NeoPixel",
                 "/Users/vridosh/.platformio/lib/Adafruit Unified Sensor",
@@ -62,7 +62,6 @@
                 "path": [
                     "/Users/vridosh/Documents/PlatformIO/Projects/BluePillTest/include",
                     "/Users/vridosh/Documents/PlatformIO/Projects/BluePillTest/src",
-                    "/Users/vridosh/Documents/PlatformIO/Projects/BluePillTest/.pio/libdeps/genericSTM32F103C8/Nanopb",
                     "/Users/vridosh/.platformio/packages/framework-arduinoststm32/cores/arduino/avr",
                     "/Users/vridosh/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32",
                     "/Users/vridosh/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32/LL",
@@ -85,6 +84,7 @@
                     "/Users/vridosh/.platformio/packages/framework-cmsis/CMSIS/DSP/Include",
                     "/Users/vridosh/.platformio/packages/framework-arduinoststm32/cores/arduino",
                     "/Users/vridosh/.platformio/packages/framework-arduinoststm32/variants/Generic_F103Cx",
+                    "/Users/vridosh/Documents/PlatformIO/Projects/BluePillTest/.pio/libdeps/genericSTM32F103C8/Nanopb",
                     "/Users/vridosh/.platformio/lib/Adafruit BME280 Library",
                     "/Users/vridosh/.platformio/lib/Adafruit NeoPixel",
                     "/Users/vridosh/.platformio/lib/Adafruit Unified Sensor",
@@ -121,13 +121,12 @@
                 "ARDUINO_GENERICSTM32F103C8",
                 "BOARD_NAME=\"GENERICSTM32F103C8\"",
                 "HAL_UART_MODULE_ENABLED",
-                " PB_FIELD_32BIT=1",
-                " PB_NO_PACKED_STRUCTS=1",
+                " STM32=1",
                 ""
             ],
             "intelliSenseMode": "clang-x64",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
             "compilerPath": "/Users/vridosh/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc",
             "compilerArgs": [
                 "-mcpu=cortex-m3",

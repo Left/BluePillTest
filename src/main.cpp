@@ -1,10 +1,7 @@
 // #include <optional>
-
 #include <Arduino.h>
 
-#include <pb_encode.h>
-#include <pb_decode.h>
-#include "protocol.pb.h"
+#include "../../MyWiFiController/src/uart.h"
 
 #define __countof(x) (sizeof(x)/sizeof(x[0]))
 
@@ -16,12 +13,28 @@ void Triac1Timer_callback(HardwareTimer*) {
 }
 */
 
-HardwareSerial serial2(PA3, PA2);
-HardwareSerial serial3(PB11, PB10);
+HardwareSerial debugSerial(PA3, PA2); // UART2
+HardwareSerial esp8266Serial(PB11, PB10); // 
+
+uart::Sender sndr(
+  [](const uint8_t* buffer, size_t size) {
+    return esp8266Serial.write(buffer, size);
+  }
+);
+
+uart::Receiver rcvr(
+  []() {
+    auto av = esp8266Serial.available();
+    return av;
+  },
+  [](uint8_t* buffer, size_t size) {
+    return esp8266Serial.readBytes(buffer, size);
+  }
+);
 
 void setup() {
-  serial3.begin(460800);
-  serial2.begin(460800);
+  esp8266Serial.begin(460800);
+  debugSerial.begin(921600);
 
   // pinMode(PB9, INPUT);
   // pinMode(PC13, OUTPUT);
@@ -36,7 +49,7 @@ void setup() {
   // pwm_start(PA_15, 100, 50, MICROSEC_COMPARE_FORMAT);
   
   // pwm_start(PA_15, 1000, 800, MICROSEC_COMPARE_FORMAT);
-  serial2.println("RESTART");
+  debugSerial.println("RESTART!");
 }
 
 uint32_t t = millis();
@@ -44,33 +57,6 @@ uint32_t num = 0;
 uint8_t state = 0;
 
 uint8_t buffer[128];
-
-void sendMessage(const Msg& message) {
-    // Create a stream that will write to our buffer.
-    pb_ostream_t stream = pb_ostream_from_buffer(buffer, sizeof(buffer));
-
-    pb_encode(&stream, Msg_fields, &message);
-
-    serial3.write(0x80);
-    serial3.write(0x1d);
-    serial3.write(0x7d);
-    serial3.write(0x2e);
-    serial3.write(0x00);
-    serial3.write(0x03);
-    serial3.write(0xb9);
-    serial3.write(0x13);
-    for (size_t i = 0; i < stream.bytes_written; ++i) {
-      Serial3.write(buffer[i]);
-    }
-    serial3.write(0xff);
-    serial3.write(0x5b);
-    serial3.write(0xa1);
-    serial3.write(0x35);
-    serial3.write(0x33);
-    serial3.write(0x6f);
-    serial3.write(0xf5);
-    serial3.write(0x37);
-}
 
 int8_t sensorWas = -1;
 
@@ -104,24 +90,14 @@ void loop() {
 
   // serial2.print(pc13); 
   // serial2.println();
-  while (serial3.available() > 8) {
-    struct Signature {
-        uint8_t start0;
-        uint8_t start1;
-        uint8_t start2;
-        uint8_t start3;
-        size_t size;
-    } sig = { 42, 19, 53, 11, 0 };
-    if (serial3.readBytes((uint8_t*) &sig, 8) == 8) {
-      if (sig.start0 == 42 && sig.start1 == 19 && sig.start2 == 53 && sig.start3 == 11) {
-        serial2.println(sig.size);
-        std::vector<uint8_t> buf(sig.size, 0);
-        serial3.readBytes(&buf[0], sig.size);
-      }
-      
+  rcvr.receive([](uint8_t* buffer, size_t size) {
+    // 
+    debugSerial.print(size); debugSerial.print(": ");
+    for (size_t i = 0; i < size; ++i) {
+      debugSerial.print((int) buffer[i]); debugSerial.print(" ");
     }
-    // serial2.print(serial3.read());
-  }
+    debugSerial.println();
+  });
 
   // pwmWrite(PC13, pc13); 
 
@@ -131,6 +107,7 @@ void loop() {
   if (millis() - t >= 1000) {
 
     t = millis();
+    // debugSerial.println(t);
     // sendMessage(message);
   }
 
